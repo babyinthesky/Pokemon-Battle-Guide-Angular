@@ -1,0 +1,177 @@
+
+<div class="row frame">
+
+  <div class="col-md-6 col-xs-12 col-sm-6">
+    <h4>Select Pokemon Defending Gym</h4>
+
+<!--    <div class="row info-panel" >
+      <label class="center-block"><h5 class="text-center">Select One Defender and Start!</h5></label>
+      <button ng-click="battle.listBest()" class="btn btn-info btn-default center-block">Start</button>
+    </div> -->
+    <div>
+      <ul class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="#">Single Search</a></li>
+        <li role="presentation"><a href="#">Multiple Pokemon</a></li>
+      </ul>
+    </div>
+
+    <div class="search-panel-s pull-right">
+    <!--  <p><h5>Pokemon's name: </h5></p> -->
+      <input type="text" class="poke-list-s" placeholder="Type Name Here"
+        list="pokemons" height="50px" ng-model="poke_name"/>
+      <datalist id="pokemons">
+        <option ng-repeat="item in battle.pokemon">
+          {{item.name}}
+        </option>
+      </datalist>
+      <button type="button" class="btn btn-default btn-sm" ng-click="battle.onSearch(poke_name)">
+        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+      </button>
+    </div>
+
+    <div id="defender" class="panel-scroll">
+      <div id="d{{item.id}}" ng-repeat="item in battle.pokemon" class="col-md-3 col-xs-3 col-sm-4"
+      data-toggle="tooltip" data-placement="top" title="{{item.type1}} {{item.type2}}" tooltip
+      ng-mouseover="battle.onItemMouseOver(item.id)" ng-mouseleave="battle.onItemMouseLeave()"
+      ng-class="{'loaded':$parent.showOK=='{{item.id}}'}"
+      ng-click="battle.onItemClick(item.id);battle.listBest(item.id)">
+        <div>
+          <input id="radio{{item.id}}" type="radio" name="check"></input>
+        <!--<span id="selected-order">1</span>
+          <button class="btn btn-info btn-xs" ng-show="$parent.showOK=='{{item.id}}'">OK</button>-->
+          <button class="btn btn-info btn-xs btn-ok-hide"
+          ng-class="{'btn-ok':$parent.showOK=='{{item.id}}'}"
+          ng-click="battle.listBest(item.id)">Loaded</button>
+        </div>
+        <p>{{item.name}}</p>
+        <img src="{{item.img}}" class="img-responsive">
+      </div>
+    </div>
+  </div>
+  <div id="result_panel" class="col-md-6 col-xs-12 col-sm-6 panel-scroll">
+    <div class="flex">
+      <div><h4>Rank of Attackers&nbsp;</h4></div>
+      <div ng-hide="hideResult" class="ng-hide">
+        <h4>Against <span class="label label-info">{{battle.selectedName}}</span>&nbsp;:</h4>
+      </div>
+    </div>
+    <div ng-hide="hideResult" class="ng-hide">
+      <p><h4>
+        <span class="label label-success">
+          Recommended battling types ordered by scores:
+        </span>
+      </h4></p>
+      <div class="flex" >
+        <button class="btn btn-default btn-sm"
+          ng-repeat="item in battle.orderType"
+          ng-class="{'btn-0-5': item.Points==0.5, 'btn-1': item.Points==1,
+          'btn-1-5':item.Points==1.5, 'btn-2':item.Points==2,
+          'btn-2-5':item.Points==2.5, 'btn-3':item.Points==3,
+          'btn-3-5':item.Points==3.5, 'btn-4':item.Points==4, 'btn-5':item.Points==5}"
+          ng-click="battle.scrollTo(item.type)">
+          {{item.type}}
+        </button>
+      </div>
+    </div>
+    <table class="table" >
+        <tr>
+          <td><strong>Name</strong></td>
+          <td><strong>Type</strong></td>
+          <td><strong>Points</strong></td>
+          <td><strong>Attack Points</strong></td>
+          <td><strong>Defensive Points</strong></td>
+          <td><strong>Details</strong></td>
+        </tr>
+        <tr class="{{item.type1.concat(item.type2)}}" ng-repeat="item in battle.battleList | orderBy: ['-Points','type1.concat(type2)']">
+          <td class="clickable" ng-click="battle.onAttackerClick(item.id)">
+            <span>{{item.id}}</span>
+            <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#pokeModal"
+            ng-click="battle.onAttackerClick(item.id)">
+              <strong>{{ item.name }}</strong>
+            </button>
+            <img src="{{ item.img}}" class="img-responsive battle-list-Img">
+          </td>
+          <td>{{item.type1.concat("  ").concat(item.type2)}}</td>
+          <td>{{item.Points}}</td>
+          <td>{{item.aPoint}}</td>
+          <td >{{item.dPoint}}</td>
+          <td><span class="glyphicon glyphicon-plus-sign clickable" aria-hidden="true" style="font-size:20px;"
+            ng-click="battle.onAttackerClick(item.id)"></span></td>
+          <td></td>
+        </tr>
+    </table>
+
+    <div class="modal fade" id="pokeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Comparison between Defender and Attacker</h4>
+          </div>
+          <div class="modal-body">
+            <div class="col-md-12 col-xs-12 col-sm-12">
+              <div class="col-md-4 col-xs-4 col-sm-4 defender-frame">
+                <img src="{{battle.defenderImage}}" class="img-responsive">
+              </div>
+              <div class="col-md-4 col-xs-4 col-sm-4">
+
+              </div>
+              <div class="col-md-4 col-xs-4 col-sm-4 attacker-frame">
+                <img src="{{battle.attackerImage}}" class="img-responsive">
+              </div>
+
+            </div>
+
+            <div class="col-md-12 col-xs-12 col-sm-12 center-block text-middle">
+              <div class="chart">
+                <ul>
+                  <li>
+                    <ul>
+                      <li>
+                        <span class="defender" title="HP" style="height:70%;"></span>
+                      </li>
+                      <li>
+                        <span class="attacker" title="HP" style="height:90%;"></span>
+                      </li>
+                    </ul>
+                     <div class="text-center">HP</div>
+                  </li>
+
+                  <li>
+                    <ul>
+                      <li>
+                        <span class="defender" title="Attack" style="height:50%;"></span>
+                      </li>
+                      <li>
+                        <span class="attacker" style="height:70%;"></span>
+                      </li>
+                    </ul>
+                    <div class="text-center">Attack</div>
+                  </li>
+
+                  <li>
+                    <ul>
+                      <li>
+                        <span class="defender" style="height:50%;"></span>
+                      </li>
+                      <li>
+                        <span class="attacker" style="height:80%;"></span>
+                      </li>
+                    </ul>
+                    <div class="text-center">Defense</div>
+                  </li>
+
+                </ul>
+              </div>
+            </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

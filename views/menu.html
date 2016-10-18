@@ -1,0 +1,82 @@
+
+
+
+<div class="menu-header text-center">
+  <h3>Pokemon World</h3>
+  <img src="images/title.png" class="img-responsive center-block" alt="main pic" style="height:55%;">
+</div>
+
+<div class="row">
+<!--<table class="table items-container" >
+    <tr>
+      <td><strong>Name</strong></td>
+      <td><strong>Profile</strong></td>
+      <td><strong>Power</strong></td>
+      <td><strong>Defense</strong></td>
+      <td><strong>Add to show</strong></td>
+    </tr>
+    <tr ng-repeat="item in menu.items">
+      <td><a ui-sref="collection({id:item.id})"><strong>{{ item.name }}</a></strong></td>
+      <td><img src="{{ item.img}}" class="img-responsive "></td>
+      <td>{{ item.power }}</td>
+      <td>{{ item.defense }}</td>
+      <td><input id="check" type="checkbox" ng-click='menu.onChecked(item.id)'>{{menu.show_text}}</input></td>
+    </tr>
+</table> -->
+<div class="row flex">
+  <div class="col-md-6 col-xs-12 col-sm-6">
+    <div class="search-panel-big">
+      <!--<p><h5>Filter by Type:</h5></p>
+      <input type="text" class="poke-list-big" list="pokeType"/>
+      <datalist id="pokeType" class=" panel-scroll">
+      </datalist>
+      <button type="button" class="btn btn-default btn-default">
+        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+      </button> -->
+    <p><h5>Filter by Type:</h5>
+    <select size="1" class="" style="margin-left:10px;margin-top:10px;margin-bottom:10px;font-size:20px;"
+    ng-model="type" ng-change="menu.filterByType(type)">
+      <option>All</option>
+      <option ng-repeat="item in menu.types">{{item.type}}</option>
+    </select>
+    </div>
+  </div>
+  <div class="col-md-6 col-xs-12 col-sm-6">
+    <div class="search-panel-big">
+      <p><h5>Pokemon's name: </h5></p>
+
+      <input type="text" placeholder="Type Name Here" class="poke-list-big" list="pokemons" ng-model="poke_name"/>
+      <datalist id="pokemons">
+        <option ng-repeat="item in menu.items">
+          <img src="{{item.img}}" class="img-responsive dropdown-Img">{{item.name}}
+        </option>
+      </datalist>
+      <button type="button" class="btn btn-default btn-sm" ng-click="menu.onSearch(poke_name)">
+        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+      </button>
+
+    </div>
+  </div>
+</div>
+
+<div id="poke_table" class="col-md-12 col-xs-12 col-sm-12 panel-scroll-homepage">
+<table  class="table items-container" >
+    <tr>
+      <td><strong>Name</strong></td>
+      <td><strong>Type</strong></td>
+      <td><strong>Details</strong></td>
+      <td><strong>Evolution</strong></td>
+    </tr>
+    <tr id="poke_{{item.name}}" ng-repeat="item in menu.items">
+      <td>
+        <span>{{item.id}}</span>
+        <a ui-sref="collection({id:item.id})"><strong>{{ item.name }}</strong></a>
+        <img src="{{ item.img}}" class="img-responsive home-list-Img">
+      </td>
+      <td>{{item.type1.concat("  ").concat(item.type2)}}</td>
+      <td>{{ item.detail}}</td>
+      <td>{{ item.evolution}}</td>
+    </tr>
+</table>
+</div>
+</div>
